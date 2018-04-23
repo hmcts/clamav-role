@@ -1,0 +1,51 @@
+---
+
+  - name: Install selinux manage packages
+    yum:
+      name: "{{item}}"
+    with_items:
+    - libselinux-python
+    - libsemanage-python
+    when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
+    tags:
+      - clamav
+
+  - name: Remove ClamAV packages from old role
+    yum:
+      name: "{{item}}"
+      state: absent
+    with_items:
+    - clamav-server
+    - clamav-scanner-systemd
+    - clamav-server-systemd
+    tags:
+      - clamav
+
+  - name: Install ClamAV packages
+    yum:
+      name: "{{item}}"
+      state: installed
+      disablerepo: "*"
+      enablerepo: "epel,base"
+    with_items:
+    - clamav
+    - clamav-update
+    tags:
+      - clamav
+
+  - name: Create scripts and infected directory
+    file:
+      path: "{{ item }}"
+      state: directory
+    tags:
+      - clamav
+    with_items:
+      - /usr/clamav/scripts
+      - /usr/clamav/infected
+
+  - name: Copy freshclam configuration
+    template:
+      src: freshclam.conf.j2
+      dest: /etc/freshclam.conf
+    tags:
+      - clamav

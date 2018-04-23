@@ -1,0 +1,39 @@
+---
+- hosts: all
+
+  pre_tasks:
+  - name: pre-task test
+    yum:
+      name: tcpdump
+      state: present
+
+  - name: Add EICAR file to /tmp
+    copy:
+      content: 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'
+      dest: /tmp/EICAR
+      owner: root
+      mode: 0666
+
+- hosts: all
+  vars:
+    example_var: "TEST_VALUE"
+    clamav_freshclam_proxy_host: "proxyout.reform.hmcts.net"
+    clamav_freshclam_proxy_port: "8080"
+  roles:
+    - role: clamav-role
+
+  post_tasks:
+  - name: post-task test
+    yum:
+      name: tcpdump
+      state: present
+
+  - name: Run the clam script against EICAR
+    command: clamscan -ri /tmp --log="/var/log/clamscan/scan.log" --copy="/usr/clamav/infected/"
+    register: clamresult
+    failed_when: "'Eicar-Test-Signature FOUND' not in clamresult.stdout"
+    changed_when: False
+
+  - name: Print above scraped vaue
+    debug:
+      msg: "{{ clamresult }}"

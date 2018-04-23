@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Log location
+LOG=/var/log/clamscan/scan.log
+
+DIRTOSCAN="/home /opt /bin /usr /etc /var /tmp";
+for S in ${DIRTOSCAN}; do
+    clamscan -ri "$S" --log="$LOG" --move="/usr/clamav/infected/" --no-summary;
+done

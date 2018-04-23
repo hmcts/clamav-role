@@ -1,0 +1,12 @@
+---
+  - name: Package installation
+    include_tasks: "install-{{ ansible_os_family|lower }}.yml"
+
+  - name: SELinux Configuration
+    include_tasks: "selinux.yml"
+
+  - name: Cron configuration
+    include_tasks: "cron.yml"
+
+  - name: Log configuration
+    include_tasks: "logs.yml"

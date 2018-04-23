@@ -1,0 +1,34 @@
+---
+
+  - name: Create log directory to log things
+    file:
+      path: /var/log/clamscan
+      state: directory
+    tags:
+      - clamav
+
+  - name: Create scan.log for Zabbix
+    file:
+      path: /var/log/clamscan/scan.log
+      owner: root
+      group: root
+      state: touch
+      mode: 0644
+    tags:
+      - clamav
+    register: touch_log
+    changed_when: touch_log.diff.before.state != "file"
+
+  - name: Copy logrotate for freshclam
+    template:
+      src: freshclam-logrotate.conf.j2
+      dest: /etc/logrotate.d/clamav-update
+    tags:
+      - clamav
+
+  - name: Copy logrotate for clamscan
+    template:
+      src: clamscan-logrotate.conf.j2
+      dest: /etc/logrotate.d/clamav-scan
+    tags:
+      - clamav
