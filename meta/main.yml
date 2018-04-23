@@ -2,7 +2,7 @@ galaxy_info:
   author: Reform Devops
   description: Install and configure ClamAV Crontab
   license: MIT
-  min_ansible_version: 1.2
+  min_ansible_version: 2.4
   platforms:
   - name: EL
     versions:
