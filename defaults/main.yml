@@ -2,6 +2,6 @@
 # Freshclam configuration
 # Check vars for variables used to overwrite these.
 clamav_freshclam_file_location: /etc/freshclam.conf
-clamav_freshclam_proxy_host: {{ proxy.host }}
-clamav_freshclam_proxy_port: {{ proxy.port }}
+clamav_freshclam_proxy_host: proxyout.reform.hmcts.net
+clamav_freshclam_proxy_port: 8080
 clamav_freshclam_log: /var/log/clamscan/freshclam.log
